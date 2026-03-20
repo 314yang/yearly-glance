@@ -21,8 +21,10 @@ import { parseUserDateInput } from "@/src/service/DateParseService";
 import { Tooltip } from "@/src/components/Base/Tooltip";
 import { IsoUtils } from "@/src/utils/isoUtils";
 
-// 事件类型tab
-export const EVENT_TYPE_OPTIONS = EVENT_TYPE_LIST.map((type) => ({
+// 事件类型tab（排除节假日，由ICS导入）
+export const EVENT_TYPE_OPTIONS = EVENT_TYPE_LIST.filter(
+	(type) => type !== "holiday"
+).map((type) => ({
 	value: type,
 	label: t(`view.eventManager.${type}.name` as TranslationKeys),
 }));

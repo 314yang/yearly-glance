@@ -111,6 +111,21 @@ const translations: BaseMessage = {
 					enFullDmy: "Full English Day-Month-Year (1 October 1949)",
 				},
 			},
+			autoImportHolidays: {
+				name: "Auto import holidays",
+				desc: "Automatically import holidays from ICS URL on first startup after January 1st each year",
+			},
+			holidayIcsUrl: {
+				name: "Holiday ICS Source",
+				desc: "URL or local file path for ICS file (e.g., /holidays.ics)",
+			},
+			importHolidays: {
+				name: "Import holidays",
+				desc: "Import holidays from ICS URL now (will replace existing holidays)",
+			},
+			importSuccess: "Holiday import successful",
+			importFailed: "Holiday import failed",
+			importing: "Importing holidays...",
 		},
 		events: {
 			name: "Events",

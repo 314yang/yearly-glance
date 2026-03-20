@@ -23,12 +23,26 @@ export interface BaseEvent {
 }
 
 /**
+ * 节假日类型
+ * vacation: 放假
+ * workday: 调休上班
+ * traditional: 传统节日/节气
+ */
+export type HolidayType = "vacation" | "workday" | "traditional";
+
+/**
  * 节日接口
  * type: 节日类型, 内置节日或自定义添加的节日
  * foundDate?: 节日起源日期, 年月日，年月，年，一般用于计算周年
+ * holidayType?: 节假日类型
+ * holidayName?: 节假日原始名称（用于节假日期间分组显示）
+ * isRepeat?: 是否重复（默认 false，不重复，只在原始年份显示）
  */
 export interface Holiday extends BaseEvent {
 	foundDate?: string;
+	holidayType?: HolidayType;
+	holidayName?: string;
+	isRepeat?: boolean;
 }
 
 /**

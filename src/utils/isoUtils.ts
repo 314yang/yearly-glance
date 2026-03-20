@@ -249,4 +249,51 @@ export class IsoUtils {
 	static getCurrentYear(): number {
 		return new Date().getFullYear();
 	}
+
+	/**
+	 * 从ISO日期字符串提取年份
+	 * @param isoDate ISO日期字符串，如 "2023-01-01"
+	 * @returns 年份数字，无效返回0
+	 */
+	static getYearFromIsoDate(isoDate: string): number {
+		if (!isoDate) return 0;
+		const year = parseInt(isoDate.substring(0, 4), 10);
+		return isNaN(year) ? 0 : year;
+	}
+
+	/**
+	 * 判断是否为 URL
+	 * @param source 字符串
+	 * @returns 是否为 URL
+	 */
+	static isUrl(source: string): boolean {
+		return source.startsWith("http://") || source.startsWith("https://");
+	}
+
+	/**
+	 * 从 ICS 日期字符串解析年月日
+	 * @param icsDate ICS 日期字符串，如 "20260215"
+	 * @returns 年、月、日对象，无效返回 null
+	 */
+	static parseIcsDate(
+		icsDate: string
+	): { year: number; month: number; day: number } | null {
+		const match = icsDate.match(/^(\d{4})(\d{2})(\d{2})$/);
+		if (!match) return null;
+		return {
+			year: parseInt(match[1], 10),
+			month: parseInt(match[2], 10),
+			day: parseInt(match[3], 10),
+		};
+	}
+
+	/**
+	 * 计算两个日期之间的天数
+	 * @param startDate 开始日期
+	 * @param endDate 结束日期
+	 * @returns 天数（包含首尾）
+	 */
+	static getDaysBetween(startDate: Date, endDate: Date): number {
+		return Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+	}
 }

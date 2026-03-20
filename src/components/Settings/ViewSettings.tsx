@@ -15,7 +15,10 @@ import { SettingsItem } from "@/src/components/Settings/SettingsItem";
 import { Toggle } from "@/src/components/Base/Toggle";
 import { Select } from "@/src/components/Base/Select";
 import { Input } from "@/src/components/Base/Input";
+import { Button } from "@/src/components/Base/Button";
 import { PresetColorSettings } from "./PresetColorSettings";
+import { HolidayImportService } from "@/src/service/HolidayImportService";
+import { Notice } from "obsidian";
 
 interface ViewSettingsProps {
 	plugin: YearlyGlancePlugin;
@@ -315,6 +318,92 @@ export const ViewSettings: React.FC<ViewSettingsProps> = ({ plugin }) => {
 							handleUpdateConfig({ showCustomEvents: value })
 						}
 					/>
+				</SettingsItem>
+			</SettingsBlock>
+
+			{/* 节假日导入设置 */}
+			<SettingsBlock
+				name={t("setting.group.eventDisplay.name") as TranslationKeys}
+				desc="节假日导入与管理"
+				collapsible
+				defaultCollapsed={false}
+			>
+				{/* 自动导入节假日 */}
+				<SettingsItem
+					name={t("setting.general.autoImportHolidays.name")}
+					desc={t("setting.general.autoImportHolidays.desc")}
+				>
+					<Toggle
+						checked={config.autoImportHolidays}
+						onChange={(value) =>
+							handleUpdateConfig({ autoImportHolidays: value })
+						}
+					/>
+				</SettingsItem>
+				{/* ICS URL */}
+				<SettingsItem
+					name={t("setting.general.holidayIcsUrl.name")}
+					desc={t("setting.general.holidayIcsUrl.desc")}
+				>
+					<Input
+						type="text"
+						value={config.holidayIcsUrl}
+						onChange={(value) =>
+							handleUpdateConfig({ holidayIcsUrl: value })
+						}
+					/>
+				</SettingsItem>
+				{/* 手动导入按钮 */}
+				<SettingsItem
+					name={t("setting.general.importHolidays.name")}
+					desc={t("setting.general.importHolidays.desc")}
+				>
+					<Button
+						variant="secondary"
+						size="small"
+						onClick={async () => {
+							const notice = new Notice(
+								t("setting.general.importing"),
+								0
+							);
+							try {
+								const newHolidays =
+									await HolidayImportService.importFromSource(
+										plugin.app,
+										config.holidayIcsUrl
+									);
+								const existingHolidays =
+									plugin.settings.data.holidays || [];
+								const mergedHolidays =
+									HolidayImportService.mergeHolidays(
+										existingHolidays,
+										newHolidays
+									);
+								await plugin.updateData({ holidays: mergedHolidays });
+								notice.hide();
+								new Notice(
+									t("setting.general.importSuccess")
+								);
+							} catch (error) {
+								notice.hide();
+								const errorMsg =
+									error instanceof Error
+										? error.message
+										: String(error);
+								console.error(
+									"[Yearly Glance] 节假日导入失败:",
+									error
+								);
+								new Notice(
+									t("setting.general.importFailed") +
+										": " +
+										errorMsg
+								);
+							}
+						}}
+					>
+						{t("setting.general.importHolidays.name")}
+					</Button>
 				</SettingsItem>
 			</SettingsBlock>
 

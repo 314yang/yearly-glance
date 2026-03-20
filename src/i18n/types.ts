@@ -69,6 +69,12 @@ export type BaseMessage = {
 					enFullDmy: string;
 				};
 			}>;
+			autoImportHolidays: IBaseSettingsItem;
+			holidayIcsUrl: IBaseSettingsItem;
+			importHolidays: IBaseSettingsItem;
+			importSuccess: string;
+			importFailed: string;
+			importing: string;
 		}>;
 		events: IBaseSettingsItem;
 		group: {

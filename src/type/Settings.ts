@@ -114,6 +114,9 @@ export interface YearlyGlanceSettings {
 	emojiOnTop: boolean; // 是否在事件上方显示emoji（仅日历视图）
 	wrapEventText: boolean; // 是否换行显示事件文本
 	gregorianDisplayFormat: (typeof GREGORIAN_DISPLAY_FORMAT_OPTIONS)[number]["value"]; // 公历显示格式
+	// 节假日导入设置
+	autoImportHolidays: boolean; // 是否自动导入节假日
+	holidayIcsUrl: string; // 节假日 ICS URL
 }
 
 export const DEFAULT_SETTINGS: YearlyGlanceSettings = {
@@ -141,4 +144,6 @@ export const DEFAULT_SETTINGS: YearlyGlanceSettings = {
 	emojiOnTop: false, // 默认在左侧显示emoji
 	wrapEventText: false,
 	gregorianDisplayFormat: "YYYY-MM-DD", // 默认使用ISO格式
+	autoImportHolidays: true, // 默认自动导入节假日
+	holidayIcsUrl: "https://holiday.ailcc.com/api/holiday/ics",
 };

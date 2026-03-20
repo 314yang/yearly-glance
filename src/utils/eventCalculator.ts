@@ -13,13 +13,13 @@ export class EventCalculator {
 	 * @param isoDate ISO日期字符串
 	 * @param calendar 日期类型
 	 * @param yearSelected 当前选择的年份
-	 * @param isRepeat 是否为重复事件，针对customEvent
+	 * @param isRepeat 是否为重复事件，针对 customEvent 和 holiday
 	 * @returns 日期数组
 	 *
 	 * 优化逻辑：
-	 * 1. 对于不重复的自定义事件且有年份：不随yearSelected变动，直接计算出公历日期
-	 * 2. 对于生日：当yearSelected小于出生日期公历的年份时不计算
-	 * 3. 其他情况：正常使用yearSelected来计算
+	 * 1. 对于不重复的自定义事件和节假日且有年份：不随 yearSelected 变动，直接计算出公历日期
+	 * 2. 对于生日：当 yearSelected 小于出生日期公历的年份时不计算
+	 * 3. 其他情况：正常使用 yearSelected 来计算
 	 */
 	static calculateDateArr(
 		eventType: EventType,
@@ -32,9 +32,9 @@ export class EventCalculator {
 
 		const { year, month, day } = IsoUtils.parse(isoDate, calendar);
 
-		// 对于不重复的自定义事件且有年份，只需要计算出公历日期，不随yearSelected变动
+		// 对于不重复的自定义事件和节假日且有年份，只需要计算出公历日期，不随 yearSelected 变动
 		if (
-			eventType === "customEvent" &&
+			(eventType === "customEvent" || eventType === "holiday") &&
 			(isRepeat === undefined || isRepeat === false) &&
 			year !== undefined
 		) {
@@ -135,7 +135,8 @@ export class EventCalculator {
 			"holiday",
 			isoDate,
 			calendar,
-			yearSelected
+			yearSelected,
+			holiday.isRepeat
 		);
 
 		return {

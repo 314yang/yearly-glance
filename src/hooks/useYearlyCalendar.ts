@@ -186,7 +186,7 @@ export function useYearlyCalendar(plugin: YearlyGlancePlugin) {
 				// 使用 IsoUtils.toLocalDateString 生成当前日期的 ISO 字符串用于比较，避免时区问题
 				const currentDateISO = IsoUtils.toLocalDateString(date);
 
-				// 查找当天的事件
+				// 查找当天的事件（直接比较日期，dateArr 已根据 isRepeat 正确处理）
 				const dayEvents = allEvents.filter((event) =>
 					event.dateArr?.some((dateStr: string) => {
 						// 直接比较 ISO 日期字符串，避免时区转换问题

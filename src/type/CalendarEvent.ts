@@ -3,6 +3,7 @@ import { Birthday, CustomEvent, EventType, Holiday } from "./Events";
 // 日历事件接口
 export type CalendarEvent = (Holiday | Birthday | CustomEvent) & {
 	eventType: EventType; // 事件类型
+	isRepeat?: boolean; // 是否重复（用于节假日年份过滤）
 };
 
 // 日数据接口

@@ -23,7 +23,7 @@ English | [中文文档](https://github.com/Moyf/yearly-glance/blob/master/READM
 ## Features
 
 - 🗓️ **Yearly Calendar View**: See all months and days of the year at a glance, making annual planning effortless.
-- 🎉 **Multiple Event Types**: Supports holidays, birthdays, and fully customizable events.
+- 🎉 **Multiple Event Types**: Supports holidays, birthdays, and fully customizable events. Holidays can be imported from ICS files (see [中文文档](./README-zh.md#节假日导入) for import instructions).
 - 🎂 **Birthday Management**: Track birthdays with age, zodiac, and other attributes.
 - 🎨 **Highly Customizable**: Choose from various layouts and display styles; personalize with custom colors and emojis.
 - 🖱️ **Interactive Interface**: Click any event to view details or edit quickly.

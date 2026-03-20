@@ -21,6 +21,7 @@ import { MigrateData } from "./utils/migrateData";
 import { EventCalculator } from "./utils/eventCalculator";
 import { IsoUtils } from "./utils/isoUtils";
 import { generateEventId } from "./utils/uniqueEventId";
+import { HolidayImportService } from "./service/HolidayImportService";
 
 export default class YearlyGlancePlugin extends Plugin {
 	settings: YearlyGlanceConfig;
@@ -52,6 +53,9 @@ export default class YearlyGlancePlugin extends Plugin {
 
 		// 检查是否为第一次安装，如果是则添加示例事件
 		await this.addSampleEventOnFirstInstall(savedData);
+
+		// 检查是否需要自动导入节假日
+		await this.checkAndImportHolidays();
 
 		// 更新所有事件的dateArr字段
 		await this.updateAllEventsDateObj();
@@ -133,6 +137,32 @@ export default class YearlyGlancePlugin extends Plugin {
 			name: t("command.reloadPlugin"),
 			callback: () => this.reloadPlugin(),
 		});
+
+		this.addCommand({
+			id: "import-holidays",
+			name: t("setting.general.importHolidays.name"),
+			callback: async () => {
+				const notice = new Notice(t("setting.general.importing"), 0);
+				try {
+					const newHolidays = await HolidayImportService.importFromSource(
+						this.app,
+						this.settings.config.holidayIcsUrl
+					);
+					const existingHolidays = this.settings.data.holidays || [];
+					const merged = HolidayImportService.mergeHolidays(
+						existingHolidays,
+						newHolidays
+					);
+					await this.updateData({ holidays: merged });
+					notice.hide();
+					new Notice(t("setting.general.importSuccess"));
+				} catch (error) {
+					notice.hide();
+					new Notice(t("setting.general.importFailed"));
+					console.error("Import holidays failed:", error);
+				}
+			},
+		});
 	}
 
 	private registerRibbonCommands() {
@@ -179,6 +209,9 @@ export default class YearlyGlancePlugin extends Plugin {
 
 		// 确保所有事件都有id
 		await this.ensureEventsHaveIds();
+
+		// 更新所有事件的dateArr字段
+		await this.updateAllEventsDateObj();
 
 		await this.saveSettings();
 	}
@@ -368,6 +401,41 @@ export default class YearlyGlancePlugin extends Plugin {
 
 			// 添加到自定义事件列表
 			this.settings.data.customEvents.push(sampleEvent);
+		}
+	}
+
+	/**
+	 * 检查并自动导入节假日（每年1月1日后首次启动时）
+	 */
+	private async checkAndImportHolidays(): Promise<void> {
+		if (!this.settings.config.autoImportHolidays) {
+			return;
+		}
+
+		const currentYear = new Date().getFullYear();
+		const dataWithTimestamp = this.settings.data as {
+			holidays: Holiday[];
+			birthdays: Birthday[];
+			customEvents: CustomEvent[];
+			lastHolidayUpdate?: number;
+		};
+		const lastHolidayUpdate = dataWithTimestamp.lastHolidayUpdate;
+
+		if (!lastHolidayUpdate || lastHolidayUpdate < currentYear) {
+			try {
+				const newHolidays = await HolidayImportService.importFromSource(
+					this.app,
+					this.settings.config.holidayIcsUrl
+				);
+				const existingHolidays = this.settings.data.holidays || [];
+				this.settings.data.holidays = HolidayImportService.mergeHolidays(
+					existingHolidays,
+					newHolidays
+				);
+				dataWithTimestamp.lastHolidayUpdate = currentYear;
+			} catch (error) {
+				console.error("Auto import holidays failed:", error);
+			}
 		}
 	}
 }

@@ -111,6 +111,21 @@ const translations: BaseMessage = {
 					enFullDmy: "完整英文日月年格式(1 October 1949)",
 				},
 			},
+			autoImportHolidays: {
+				name: "自动导入节假日",
+				desc: "每年1月1日后首次启动时自动从ICS URL导入节假日",
+			},
+			holidayIcsUrl: {
+				name: "节假日 ICS 来源",
+				desc: "ICS 文件的 URL 或本地文件路径（如 /holidays.ics）",
+			},
+			importHolidays: {
+				name: "导入节假日",
+				desc: "立即从ICS URL导入节假日（会替换现有节假日数据）",
+			},
+			importSuccess: "节假日导入成功",
+			importFailed: "节假日导入失败",
+			importing: "正在导入节假日...",
 		},
 		events: {
 			name: "事件",
