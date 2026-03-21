@@ -462,15 +462,15 @@
 				background-color: transparent;
 			}
 
+			&.weekend {
+				background-color: var(--yg-day-weekend-bg-color);
+			}
+
 			&.today {
 				font-weight: bold;
 				border: 2px solid var(--yg-today-border-color);
 				background-color: var(--yg-today-bg-color);
 				box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-			}
-
-			&.weekend {
-				background-color: var(--yg-day-weekend-bg-color);
 			}
 
 			&.has-events {
